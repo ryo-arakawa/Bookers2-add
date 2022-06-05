@@ -1,8 +1,12 @@
 class BooksController < ApplicationController
-  def new
+  # 投稿一覧
+  def index
+    @user = current_user
     @book = Book.new
+    @books = Book.page(params[:page])
   end
 
+  # 新規投稿
   def create
     @book = Book.new(book_params)
     @book.user_id = current_user.id
@@ -15,18 +19,15 @@ class BooksController < ApplicationController
     end
   end
 
-  def index
-    @user = current_user
-    @book = Book.new
-    @books = Book.page(params[:page])
-  end
-
+  # 投稿詳細
   def show
     @book = Book.find(params[:id])
     @user = @book.user
     @book_new = Book.new
+    @book_comment = BookComment.new
   end
 
+  # 投稿編集
   def edit
     @book = Book.find(params[:id])
     @user = @book.user
@@ -37,6 +38,7 @@ class BooksController < ApplicationController
     end
   end
 
+  # 投稿更新
   def update
     @book = Book.find(params[:id])
     if @book.update(book_params)
@@ -46,6 +48,7 @@ class BooksController < ApplicationController
     end
   end
 
+  # 投稿削除
   def destroy
     @book = Book.find(params[:id])
     @book.destroy
